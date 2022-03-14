@@ -21,7 +21,7 @@ phases:
       - echo Build started on `date` 
       - docker pull elasticsearch:6.8.18
       - echo Extracting the Image ID for the docker image that is been built...
-      - DOCKER_IMAGE_ID=$(docker images -q elasticsearch:6.8.18)
+      - DOCKER_IMAGE_ID=$(docker images -q elasticsearch:7.0.1)
       - echo $DOCKER_IMAGE_ID
       - QUALYS_API_SERVER="https://qualysapi.qg2.apps.qualys.com"
       - USERNAME="cudve2aa"
@@ -32,9 +32,9 @@ phases:
       - ./validate_image.sh ${QUALYS_API_SERVER} ${USERNAME} ${PASSWORD} ${DOCKER_IMAGE_ID}
       - sleep 100
       - docker logs qualys-container-sensor
-      - docker tag elasticsearch:6.8.18 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
+      - docker tag elasticsearch:7.0.1 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/elasticsearch:7.0.1      
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/elasticsearch:7.0.1
