@@ -10,24 +10,24 @@ phases:
     commands:
       - echo Logging in to DockerHub...
       - docker login -u aman267 -p 123456789
+      - echo Running the Qualys Container Security Sensor in CI/CD mode...
+      - docker run -d --restart on-failure -v /var/run/docker.sock:/var/run/docker.sock:ro -v /etc/qualys:/usr/local/qualys/qpa/data/conf/agent-data -v /usr/local/qualys/sensor/data:/usr/local/qualys/qpa/data -e ACTIVATIONID=260c77e2-1c8c-40ef-b4d3-6f057c4ce2cf -e CUSTOMERID=8a72be28-4fe4-7b79-838d-b5672cd680ab -e POD_URL=https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor --net=host --name qualys-container-sensor qualys/qcs-sensor:latest --cicd-deployed-sensor
       - echo Logging in to Amazon ECR...
       - echo $AWS_DEFAULT_REGION
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - echo Running the Qualys Container Security Sensor in CI/CD mode...
-      - docker run -d --restart on-failure -v /var/run/docker.sock:/var/run/docker.sock:ro -v /etc/qualys:/usr/local/qualys/qpa/data/conf/agent-data -v /usr/local/qualys/sensor/data:/usr/local/qualys/qpa/data -e ACTIVATIONID=260c77e2-1c8c-40ef-b4d3-6f057c4ce2cf -e CUSTOMERID=8a72be28-4fe4-7b79-838d-b5672cd680ab -e POD_URL=https://cmsqagpublic.qg2.apps.qualys.com/ContainerSensor --net=host --name qualys-container-sensor qualys/qcs-sensor:latest --cicd-deployed-sensor
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...          
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
       - echo Extracting the Image ID for the docker image that is been built...
-      - QUALYS_API_SERVER="https://gateway.qg2.apps.qualys.com"
+      - QUALYS_API_SERVER="https://qualysapi.qg2.apps.qualys.com"
       - USERNAME="cudve2aa"
       - PASSWORD="1@Kunika"
-      - DOCKER_IMAGE_ID=$(docker inspect $IMAGE_REPO_NAME:$IMAGE_TAG | grep Id | sed 's/^[^=:]*[=:]//'| sed 's/^[^=:]*[=:]//' | sed 's/",//g')
+      - DOCKER_IMAGE_ID=$(docker images -q $IMAGE_REPO_NAME:$IMAGE_TAG)
       - echo $DOCKER_IMAGE_ID
-      - wget https://raw.githubusercontent.com/amanjangid26/community/master/containerSecurity/validate_image.sh --no-check-certificate
-      - wget https://raw.githubusercontent.com/amanjangid26/community/master/containerSecurity/jq_filter.txt --no-check-certificate
+      - wget https://raw.githubusercontent.com/Qualys/community/master/containerSecurity/validate_image.sh --no-check-certificate
+      - wget https://raw.githubusercontent.com/Qualys/community/master/containerSecurity/jq_filter.txt --no-check-certificate
       - chmod +x validate_image.sh
       - ./validate_image.sh ${QUALYS_API_SERVER} ${USERNAME} ${PASSWORD} ${DOCKER_IMAGE_ID}
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
