@@ -18,15 +18,14 @@ phases:
       - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
   build:
     commands:
-      - echo Build started on `date`
-      - echo Building the Docker image...          
-      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - echo Build started on `date` 
+      - docker pull elasticsearch:6.8.18
       - echo Extracting the Image ID for the docker image that is been built...
+      - DOCKER_IMAGE_ID=$(docker images -q elasticsearch:6.8.18)
+      - echo $DOCKER_IMAGE_ID
       - QUALYS_API_SERVER="https://qualysapi.qg2.apps.qualys.com"
       - USERNAME="cudve2aa"
       - PASSWORD="1@Kunika"
-      - DOCKER_IMAGE_ID=$(docker images -q $IMAGE_REPO_NAME:$IMAGE_TAG)
-      - echo $DOCKER_IMAGE_ID
       - wget https://raw.githubusercontent.com/Qualys/community/master/containerSecurity/validate_image.sh --no-check-certificate
       - wget https://raw.githubusercontent.com/Qualys/community/master/containerSecurity/jq_filter.txt --no-check-certificate
       - chmod +x validate_image.sh
