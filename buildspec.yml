@@ -31,6 +31,8 @@ phases:
       - wget https://raw.githubusercontent.com/Qualys/community/master/containerSecurity/jq_filter.txt --no-check-certificate
       - chmod +x validate_image.sh
       - ./validate_image.sh ${QUALYS_API_SERVER} ${USERNAME} ${PASSWORD} ${DOCKER_IMAGE_ID}
+      - sleep 100
+      - docker logs qualys-container-sensor
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG      
   post_build:
     commands:
