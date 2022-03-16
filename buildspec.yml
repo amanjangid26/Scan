@@ -21,9 +21,9 @@ phases:
       - echo Build started on `date` 
       - docker pull aman267/version:latest
       - echo Extracting the Image ID for the docker image that is been built...
-      - DOCKER_IMAGE_ID=$(docker images -q )
+      - DOCKER_IMAGE_ID=$(docker inspect aman267/version:latest | grep Id | sed 's/^[^=:]*[=:]//'| sed 's/^[^=:]*[=:]//' | sed 's/",//g')
       - echo $DOCKER_IMAGE_ID
-      - QUALYS_API_SERVER="https://qualysapi.qg2.apps.qualys.com"
+      - QUALYS_API_SERVER="https://gateway.qg2.apps.qualys.com"
       - USERNAME="csqua2aa"
       - PASSWORD="Hanuman$26797"
       - wget https://raw.githubusercontent.com/Qualys/community/master/containerSecurity/validate_image.sh --no-check-certificate
