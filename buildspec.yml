@@ -19,9 +19,9 @@ phases:
   build:
     commands:
       - echo Build started on `date` 
-      - docker pull elasticsearch:7.0.1
+      - docker pull aman267/version:latest
       - echo Extracting the Image ID for the docker image that is been built...
-      - DOCKER_IMAGE_ID=$(docker images -q elasticsearch:7.0.1)
+      - DOCKER_IMAGE_ID=$(docker images -q )
       - echo $DOCKER_IMAGE_ID
       - QUALYS_API_SERVER="https://qualysapi.qg2.apps.qualys.com"
       - USERNAME="csqua2aa"
